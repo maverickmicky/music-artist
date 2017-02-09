@@ -43,7 +43,7 @@ public class MusicArtistController {
 		String wikiTitle = mbProfile.relations.stream()
 											.filter(relation -> relation.type.equals("wikipedia"))
 											.findFirst().get().url.resource;
-		String artistDesc = wikiService.getArtistDescription(wikiTitle.split("http://en.wikipedia.org/wiki/")[1]);
+		String artistDesc = wikiService.getArtistDescription(wikiTitle.split("https://en.wikipedia.org/wiki/")[1]);
 
 		MusicArtistProfile profile = new MusicArtistProfile();
 		profile.description = artistDesc;
@@ -54,7 +54,7 @@ public class MusicArtistController {
 		profile.disambiguation = mbProfile.disambiguation;
 		profile.albums = new ArrayList<Album>();
 
-		mbProfile.releaseGroups.stream()
+		mbProfile.releaseGroups.stream().parallel()
 							.forEach(relGroup -> profile.albums.add(caService.getFrontCoverImageById(relGroup)));
 		return profile;
 	}
